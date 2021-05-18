@@ -32,7 +32,7 @@ impl<T> Tag for T where
 #[derive(Debug, PartialEq)]
 pub struct Header<T: num::FromPrimitive> {
     pub(crate) index_header: IndexHeader,
-    pub(crate) index_entries: Vec<IndexEntry<T>>,
+    pub index_entries: Vec<IndexEntry<T>>,
     pub(crate) store: Vec<u8>,
 }
 
@@ -517,11 +517,11 @@ impl IndexHeader {
 
 /// A singel entry within the [`IndexHeader`](self::IndexHeader)
 #[derive(Debug, PartialEq)]
-pub(crate) struct IndexEntry<T: num::FromPrimitive> {
-    pub(crate) tag: T,
-    pub(crate) data: IndexData,
-    pub(crate) offset: i32,
-    pub(crate) num_items: u32,
+pub struct IndexEntry<T: num::FromPrimitive> {
+    pub tag: T,
+    pub data: IndexData,
+    pub offset: i32,
+    pub num_items: u32,
 }
 
 use crate::constants::TypeName;
@@ -584,7 +584,7 @@ impl<T: num::FromPrimitive + num::ToPrimitive + fmt::Debug + TypeName> IndexEntr
 
 /// Data as present in a [`IndexEntry`](self::IndexEntry) .
 #[derive(Debug, PartialEq, Eq)]
-pub(crate) enum IndexData {
+pub enum IndexData {
     Null,
     Char(Vec<u8>),
     Int8(Vec<i8>),
@@ -696,7 +696,7 @@ impl IndexData {
         }
     }
 
-    pub(crate) fn num_items(&self) -> u32 {
+    pub fn num_items(&self) -> u32 {
         match self {
             IndexData::Null => 0,
             IndexData::Bin(items) => items.len() as u32,
@@ -725,7 +725,7 @@ impl IndexData {
             _ => None,
         }
     }
-    pub(crate) fn to_u32(&self) -> u32 {
+    pub fn to_u32(&self) -> u32 {
         match self {
             IndexData::Null => 0,
             IndexData::Char(_) => 1,
@@ -741,14 +741,14 @@ impl IndexData {
         }
     }
 
-    pub(crate) fn as_str(&self) -> Option<&str> {
+    pub fn as_str(&self) -> Option<&str> {
         match self {
             IndexData::StringTag(s) => Some(&s),
             _ => None,
         }
     }
 
-    pub(crate) fn as_i32(&self) -> Option<i32> {
+    pub fn as_i32(&self) -> Option<i32> {
         match self {
             IndexData::Int32(s) => {
                 if !s.is_empty() {
@@ -760,14 +760,14 @@ impl IndexData {
             _ => None,
         }
     }
-    pub(crate) fn as_i32_array(&self) -> Option<Vec<i32>> {
+    pub fn as_i32_array(&self) -> Option<Vec<i32>> {
         match self {
             IndexData::Int32(s) => Some(s.to_vec()),
             _ => None,
         }
     }
 
-    pub(crate) fn as_i64(&self) -> Option<i64> {
+    pub fn as_i64(&self) -> Option<i64> {
         match self {
             IndexData::Int64(s) => {
                 if !s.is_empty() {
@@ -780,14 +780,14 @@ impl IndexData {
         }
     }
 
-    pub(crate) fn as_string_array(&self) -> Option<&[String]> {
+    pub fn as_string_array(&self) -> Option<&[String]> {
         match self {
             IndexData::StringArray(d) | IndexData::I18NString(d) => Some(&d),
             _ => None,
         }
     }
 
-    pub(crate) fn as_binary(&self) -> Option<&[u8]> {
+    pub fn as_binary(&self) -> Option<&[u8]> {
         match self {
             IndexData::Bin(d) => Some(d.as_slice()),
             _ => None,
